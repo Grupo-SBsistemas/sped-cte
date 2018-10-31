@@ -572,36 +572,29 @@ class Make
             $this->dom->appChild($this->ide, $this->toma4, 'Falta tag "ide"');
         }
         $this->dom->appChild($this->infCte, $this->ide, 'Falta tag "infCte"');
-        if ($this->semData != '') {
-            $this->tagEntrega();
-            $this->dom->appChild($this->entrega, $this->semData, 'Falta tag "Entrega"');
-        }
-        if ($this->comData != '') {
-            $this->tagEntrega();
-            $this->dom->appChild($this->entrega, $this->comData, 'Falta tag "Entrega"');
-        }
-        if ($this->noPeriodo != '') {
-            $this->tagEntrega();
-            $this->dom->appChild($this->entrega, $this->noPeriodo, 'Falta tag "Entrega"');
-        }
-        if ($this->semHora != '') {
-            $this->tagEntrega();
-            $this->dom->appChild($this->entrega, $this->semHora, 'Falta tag "Entrega"');
-        }
-        if ($this->comHora != '') {
-            $this->tagEntrega();
-            $this->dom->appChild($this->entrega, $this->comHora, 'Falta tag "Entrega"');
-        }
-        if ($this->noInter != '') {
-            $this->tagEntrega();
-            $this->dom->appChild($this->entrega, $this->noInter, 'Falta tag "Entrega"');
-        }
         if ($this->compl != '') {
             if ($this->fluxo != '') {
                 foreach ($this->pass as $pass) {
                     $this->dom->appChild($this->fluxo, $pass, 'Falta tag "fluxo"');
                 }
-                $this->dom->appChild($this->compl, $this->fluxo, 'Falta tag "infCte"');
+            }
+            if ($this->semData != '') {
+                $this->dom->appChild($this->entrega, $this->semData, 'Falta tag "Entrega"');
+            }
+            if ($this->comData != '') {
+                $this->dom->appChild($this->entrega, $this->comData, 'Falta tag "Entrega"');
+            }
+            if ($this->noPeriodo != '') {
+                $this->dom->appChild($this->entrega, $this->noPeriodo, 'Falta tag "Entrega"');
+            }
+            if ($this->semHora != '') {
+                $this->dom->appChild($this->entrega, $this->semHora, 'Falta tag "Entrega"');
+            }
+            if ($this->comHora != '') {
+                $this->dom->appChild($this->entrega, $this->comHora, 'Falta tag "Entrega"');
+            }
+            if ($this->noInter != '') {
+                $this->dom->appChild($this->entrega, $this->noInter, 'Falta tag "Entrega"');
             }
             foreach ($this->obsCont as $obsCont) {
                 $this->dom->appChild($this->compl, $obsCont, 'Falta tag "compl"');
@@ -1661,6 +1654,20 @@ class Make
             false,
             $identificador . 'Funcionário emissor do CTe'
         );
+        if ($this->fluxo != '') {
+            $this->dom->appChild(
+                $this->compl,
+                $this->fluxo,
+                'Falta tag "fluxo'
+            );
+        }
+        if ($this->entrega != '') {
+            $this->dom->appChild(
+                $this->compl,
+                $this->entrega,
+                'Falta tag "entrega'
+            );
+        }
         $this->dom->addChild(
             $this->compl,
             'origCalc',
@@ -3184,7 +3191,7 @@ class Make
      *
      * @return \DOMElement
      */
-    private function tagEntrega()
+    public function tagEntrega()
     {
         if ($this->compl == '') {
             $this->compl = $this->dom->createElement('compl');
