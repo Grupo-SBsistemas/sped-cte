@@ -3129,6 +3129,14 @@ class Make
             $this->imp->appendChild($icmsDifal);
         }
 
+        $this->dom->addChild(
+            $this->imp,
+            'infAdFisco',
+            $std->infAdFisco,
+            false,
+            "$identificador Informações adicionais de interesse do Fisco"
+        );
+
         return $tagIcms;
     }
 
