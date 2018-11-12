@@ -42,8 +42,7 @@ class Tools extends ToolsCommon
         $aXml,
         $idLote = '',
         $compactar = false,
-        &$xmls = [],
-        &$sent
+        &$xmls = []
     ) {
         if (!is_array($aXml)) {
             throw new \InvalidArgumentException('Os XML das CTe devem ser passados em um array.');
@@ -78,7 +77,6 @@ class Tools extends ToolsCommon
         //montagem dos dados da mensagem SOAP
         $parameters = ['cteDadosMsg' => $request];
         $body = "<cteDadosMsg xmlns=\"$this->urlNamespace\">$request</cteDadosMsg>";
-        $sent = $body;
         $method = $this->urlMethod;
         if ($compactar) {
             $gzdata = base64_encode(gzencode($cons, 9, FORCE_GZIP));
