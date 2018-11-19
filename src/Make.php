@@ -645,15 +645,18 @@ class Make
                 }
             }
 
-            $this->dom->appChild($this->infCTeNorm, $this->infDoc, 'Falta tag "infDoc"');
-            foreach ($this->infNF as $infNF) {
-                $this->dom->appChild($this->infDoc, $infNF, 'Falta tag "infNF"');
-            }
-            foreach ($this->infNFe as $infNFe) {
-                $this->dom->appChild($this->infDoc, $infNFe, 'Falta tag "infNFe"');
-            }
-            foreach ($this->infOutros as $infOutros) {
-                $this->dom->appChild($this->infDoc, $infOutros, 'Falta tag "infOutros"');
+            // Se não for Redespacho Intermediario
+            if ($this->tpServ != 3){
+                $this->dom->appChild($this->infCTeNorm, $this->infDoc, 'Falta tag "infDoc"');
+                foreach ($this->infNF as $infNF) {
+                    $this->dom->appChild($this->infDoc, $infNF, 'Falta tag "infNF"');
+                }
+                foreach ($this->infNFe as $infNFe) {
+                    $this->dom->appChild($this->infDoc, $infNFe, 'Falta tag "infNFe"');
+                }
+                foreach ($this->infOutros as $infOutros) {
+                    $this->dom->appChild($this->infDoc, $infOutros, 'Falta tag "infOutros"');
+                }
             }
 
             if ($this->idDocAntEle != [] || $this->idDocAntPap != []) { //Caso tenha CT-es Anteriores viculados
