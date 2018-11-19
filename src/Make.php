@@ -290,6 +290,11 @@ class Make
      */
     private $infCTeNorm = '';
     /**
+     * Informações do CT-e Globalizado
+     * @var \DOMNode
+     */
+    private $infGlobalizado = '';
+    /**
      * Informações da Carga do CT-e
      * @var \DOMNode
      */
@@ -682,6 +687,10 @@ class Make
                 $this->dom->appChild($this->infModal, $this->aereo, 'Falta tag "aereo"');
             } else {
                 throw new Exception('Modal não informado ou não suportado.');
+            }
+
+            if ($this->infGlobalizado){
+                $this->dom->appChild($this->infCTeNorm, $this->infGlobalizado, 'Falta tag "infCTeNorm"');
             }
         }
 
@@ -4172,6 +4181,28 @@ class Make
 
         $this->autXML[] = $autXML;
         return $autXML;
+    }
+
+    /**
+     * Gera as tags para o elemento: "infGlobalizado" (Informações do CT-e Globalizado)
+     * #386
+     * Nível: 2
+     *
+     * @return boolean
+     */
+    public function taginfGlobalizado($std)
+    {
+        $identificador = '#2 <infGlobalizado> - ';
+        $this->infGlobalizado = $this->dom->createElement('infGlobalizado');
+        $this->dom->addChild(
+            $this->infGlobalizado,
+            'xObs',
+            $std->xObs,
+            true,
+            $identificador . 'Preencher com informações adicionais, legislação do regime especial, etc'
+        );
+
+        return $this->infGlobalizado;
     }
     
     protected function checkCTeKey(Dom $dom)
