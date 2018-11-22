@@ -634,7 +634,7 @@ class Make
         if ($this->infCteAnu != '') { // Caso seja um CTe tipo anulação
             $this->dom->appChild($this->infCte, $this->infCteAnu, 'Falta tag "infCteAnu"');
         }
-        if ($this->infCTeNorm != '') { // Caso seja um CTe tipo normal
+        if ($this->infCTeNorm != '') { // Caso seja um CTe tipo normal ou substituição
             $this->dom->appChild($this->infCte, $this->infCTeNorm, 'Falta tag "infCTeNorm"');
             $this->dom->appChild($this->infCTeNorm, $this->infCarga, 'Falta tag "infCarga"');
             foreach ($this->infQ as $infQ) {
@@ -692,8 +692,17 @@ class Make
                 throw new Exception('Modal não informado ou não suportado.');
             }
 
+            if ($this->infCteSub){
+                if ($this->tomaICMS){
+                    $this->dom->appChild($this->infCteSub, $this->tomaICMS, 'Falta tag "tomaICMS"');
+                }
+
+
+                $this->dom->appChild($this->infCTeNorm, $this->infCteSub, 'Falta tag "infCteSub"');
+            }
+
             if ($this->infGlobalizado){
-                $this->dom->appChild($this->infCTeNorm, $this->infGlobalizado, 'Falta tag "infCTeNorm"');
+                $this->dom->appChild($this->infCTeNorm, $this->infGlobalizado, 'Falta tag "infGlobalizado"');
             }
         }
 
@@ -3739,15 +3748,15 @@ class Make
 
         $this->dom->addChild(
             $this->infCteSub,
-            'chCTe',
-            $std->chCTe,
+            'chCte',
+            $std->chCte,
             false,
             "$identificador  Chave de acesso do CTe a ser substituído (original)"
         );
         $this->dom->addChild(
             $this->infCteSub,
-            'retCteAnu',
-            $std->retCteAnu,
+            'refCteAnu',
+            $std->refCteAnu,
             false,
             "$identificador  Chave de acesso do CT-e de Anulação"
         );
@@ -3801,7 +3810,7 @@ class Make
             $this->tomaICMS = $this->dom->createElement('tomaICMS');
         }
         $this->refNF = $this->dom->createElement('refNF');
-        if ($std->CNPJ != '') {
+        if (isset($std->CNPJ) && $std->CNPJ != '') {
                 $this->dom->addChild(
                     $this->refNF,
                     'CNPJ',
@@ -3809,7 +3818,7 @@ class Make
                     true,
                     $identificador . 'CNPJ do emitente'
                 );
-        } elseif ($CPF != '') {
+        } elseif (isset($std->CPF) && $std->CPF != '') {
             $this->dom->addChild(
                 $this->refNF,
                 'CPF',
@@ -3837,16 +3846,16 @@ class Make
      * @param type $std
      * @return type
      */
-    public function tagrefCTe($std)
+    public function tagrefCte($std)
     {
         if (empty($this->tomICMS)) {
             $this->tomaICMS = $this->dom->createElement('tomaICMS');
         }
-        $identificador = '#163 <refCTe> - ';
+        $identificador = '#163 <refCte> - ';
         $this->dom->addChild(
             $this->tomaICMS,
-            'refCTe',
-            $std->refCTe,
+            'refCte',
+            $std->refCte,
             false,
             "$identificador  Chave de acesso do CT-e emitida pelo tomador"
         );
