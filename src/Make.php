@@ -509,6 +509,11 @@ class Make
      * @var array
      */
     private $autXML = array();
+    /**     
+     * Informações do responsavel tecnico pela emissao do DF-e      
+     * @var \DOMNode        
+     */     
+    private $infRespTec = '';
     
     public function __construct()
     {
@@ -708,6 +713,10 @@ class Make
 
         foreach ($this->autXML as $autXML) {
             $this->dom->appChild($this->infCte, $autXML, 'Falta tag "autXML"');
+        }
+
+        if ($this->infRespTec != '') {            
+            $this->dom->appChild($this->infCte, $this->infRespTec, 'Falta tag "infRespTec"');
         }
 
         //[1] tag infCTe
@@ -4215,6 +4224,47 @@ class Make
         );
 
         return $this->infGlobalizado;
+    }
+
+    /**
+     * Gera as tags para o elemento: infRespTec (Grupo de informações para informação do responsavel tecnico pelo sistema de emissão DF-e) e adiciona ao grupo infCTe
+     * Nível: 1
+     *
+     * @return \DOMElement
+     */
+    public function taginfRespTec($std) 
+    {
+        $identificador = '# <infRespTec> - ';
+        $this->infRespTec = $this->dom->createElement('infRespTec');
+        $this->dom->addChild(
+            $this->infRespTec,
+            'CNPJ',
+            $std->CNPJ,
+            true,
+            $identificador . 'CNPJ responsável'
+        );        
+        $this->dom->addChild(
+            $this->infRespTec,
+            'xContato',
+            $std->xContato,
+            true,
+            $identificador . 'Contato responsável'
+        );
+        $this->dom->addChild(
+            $this->infRespTec,
+            'email',
+            $std->email,
+            true,
+            $identificador . 'E-mail responsavel'
+        );        
+        $this->dom->addChild(
+            $this->infRespTec,
+            'fone',
+            $std->fone,
+            true,
+            $identificador . 'Telefone responsavel'
+        );
+        return $this->infRespTec;
     }
     
     protected function checkCTeKey(Dom $dom)
