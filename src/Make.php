@@ -688,6 +688,11 @@ class Make
             $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
             if ($this->modal=='01') {
                 $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
+
+                foreach ($this->occ as $occ) {
+                    $this->dom->appChild($this->rodo, $occ, 'Falta tag "occ"');
+                }
+
                 foreach ($this->veic as $veic) {
                     $this->dom->appChild($this->rodo, $veic, 'Falta tag "veic"');
                 }
@@ -4265,6 +4270,48 @@ class Make
             $identificador . 'Telefone responsavel'
         );
         return $this->infRespTec;
+    }
+
+     /**
+     * Leiaute - Rodoviário
+     * Gera as tags para o elemento: "occ" (Ordens de Coleta associados)
+     * #3
+     * Nível: 1
+     * @return mixed
+     */
+    public function tagOcc($std)
+    {
+        $identificador = '#3 <occ> - ';
+        $occ = $this->dom->createElement('occ');
+
+        if ($std->serie){
+            $this->dom->addChild($occ, 'serie', $std->serie, false, $identificador . 'Série da OCC');
+        }
+
+        $this->dom->addChild($occ, 'nOcc', $std->nOcc, true, $identificador . 'Número da Ordem de coleta');
+
+        $this->dom->addChild($occ, 'dEmi', $std->dEmi, true, $identificador . 'Data de emissão da ordem de coleta');
+
+        $identificador = '#7 <emiOcc> - ';
+        $emiOcc = $this->dom->createElement('emiOcc');
+        $this->dom->addChild($emiOcc, 'CNPJ', $std->CNPJ, true, $identificador . 'Número do CNPJ');
+
+        if ($std->cInt){
+            $this->dom->addChild($emiOcc, 'cInt', $std->cInt, false, $identificador . 'Código interno de uso da transportadora');
+        }
+
+        $this->dom->addChild($emiOcc, 'IE', $std->IE, true, $identificador . 'Inscrição Estadual');
+
+        $this->dom->addChild($emiOcc, 'UF', $std->UF, true, $identificador . 'Sigla da UF');
+
+        if ($std->fone){
+            $this->dom->addChild($emiOcc, 'fone', $std->fone, false, $identificador . 'Telefone');
+        }
+
+        $occ->appendChild($emiOcc);
+
+        $this->occ[] = $occ;
+        return $occ;
     }
     
     protected function checkCTeKey(Dom $dom)
