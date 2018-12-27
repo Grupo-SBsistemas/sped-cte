@@ -350,6 +350,8 @@ class Make
      * @var array
      */
     private $infUnidCarga = array();
+
+    private $infUnidTranspCarga = array();
     /**
      * Lacres das Unidades de Carga
      * @var array
@@ -656,7 +658,15 @@ class Make
                 foreach ($this->infNF as $infNF) {
                     $this->dom->appChild($this->infDoc, $infNF, 'Falta tag "infNF"');
                 }
-                foreach ($this->infNFe as $infNFe) {
+                foreach ($this->infNFe as $nItem => $infNFe) {
+                    if (isset($this->infUnidCarga[$nItem])) {
+                        $this->dom->addArrayChild($infNFe, $this->infUnidCarga[$nItem]);
+                    }
+
+                    if (isset($this->infUnidTransp[$nItem])) {
+                        $this->dom->addArrayChild($infNFe, $this->infUnidTransp[$nItem]);
+                    }
+
                     $this->dom->appChild($this->infDoc, $infNFe, 'Falta tag "infNFe"');
                 }
                 foreach ($this->infOutros as $infOutros) {
@@ -3429,30 +3439,32 @@ class Make
     public function taginfNFe($std)
     {
         $identificador = '#297 <infNFe> - ';
-        $this->infNFe[] = $this->dom->createElement('infNFe');
-        $posicao = (integer)count($this->infNFe) - 1;
+        $infNFe = $this->dom->createElement('infNFe');
+
         $this->dom->addChild(
-            $this->infNFe[$posicao],
+            $infNFe,
             'chave',
             $std->chave,
             true,
             $identificador . 'Chave de acesso da NF-e'
         );
         $this->dom->addChild(
-            $this->infNFe[$posicao],
+            $infNFe,
             'PIN',
             $std->PIN,
             false,
             $identificador . 'PIN SUFRAMA'
         );
         $this->dom->addChild(
-            $this->infNFe[$posicao],
+            $infNFe,
             'dPrev',
             $std->dPrev,
             false,
             $identificador . 'Data prevista de entrega'
         );
-        return $this->infNFe[$posicao];
+
+        $this->infNFe[$std->nItem] = $infNFe;
+        return $infNFe;
     }
 
     /**
@@ -4312,6 +4324,115 @@ class Make
 
         $this->occ[] = $occ;
         return $occ;
+    }
+
+    public function tagInfUnidTransp(stdClass $std){
+        $infUnidTransp = $this->dom->createElement("infUnidTransp");
+        $this->dom->addChild(
+            $infUnidTransp,
+            "tpUnidTransp",
+            $std->tpUnidTransp,
+            true,
+            "Tipo da Unidade de Transporte"
+        );
+        $this->dom->addChild(
+            $infUnidTransp,
+            "idUnidTransp",
+            $std->idUnidTransp,
+            false,
+            "Identificação da Unidade de Transporte"
+        );
+
+        if (isset($std->lacres) && count($std->lacres) > 0){
+            foreach ($std->lacres as $lacre) {
+                $lacres = $this->dom->createElement("lacUnidTransp");
+
+                $this->dom->addChild(
+                    $lacres,
+                    "nLacre",
+                    $lacre,
+                    true,
+                    "Número do lacre"
+                );
+
+                $this->dom->appChild(
+                    $infUnidTransp,
+                    $lacres
+                );
+            }
+        }
+
+        if (isset($this->infUnidTranspCarga[$std->nItem]) && count($this->infUnidTranspCarga[$std->nItem]) > 0){
+            $this->dom->addArrayChild($infUnidTransp, $this->infUnidTranspCarga[$std->nItem]);
+        }
+
+        if (isset($std->qtdRat) && $std->qtdRat){
+            $this->dom->addChild(
+                $infUnidTransp,
+                "qtdRat",
+                $std->qtdRat,
+                false,
+                "Quantidade rateada (Peso,Volume)"
+            );
+        }
+
+        $this->infUnidTransp[$std->nItem][] = $infUnidTransp;
+        return $infUnidTransp;
+    }
+
+    public function tagInfUnidCarga(stdClass $std){
+        $infUnidCarga = $this->dom->createElement("infUnidCarga");
+        $this->dom->addChild(
+            $infUnidCarga,
+            "tpUnidCarga",
+            $std->tpUnidCarga,
+            true,
+            "Tipo da Unidade de Carga"
+        );
+        $this->dom->addChild(
+            $infUnidCarga,
+            "idUnidCarga",
+            $std->idUnidCarga,
+            false,
+            "Identificação da Unidade de Carga"
+        );
+
+        if (isset($std->lacres) && count($std->lacres) > 0){
+            foreach ($std->lacres as $lacre) {
+                $lacres = $this->dom->createElement("lacUnidCarga");
+
+                $this->dom->addChild(
+                    $lacres,
+                    "nLacre",
+                    $lacre,
+                    true,
+                    "Número do lacre"
+                );
+
+                $this->dom->appChild(
+                    $infUnidCarga,
+                    $lacres
+                );
+            }
+        }
+
+        if (isset($std->qtdRat) && $std->qtdRat){
+            $this->dom->addChild(
+                $infUnidCarga,
+                "qtdRat",
+                $std->qtdRat,
+                false,
+                "Quantidade rateada (Peso,Volume)"
+            );
+        }
+        
+        if ($std->tipo == 'c'){
+            $this->infUnidCarga[$std->nItem][] = $infUnidCarga;
+        } else {
+            $this->infUnidTranspCarga[$std->nItem][] = $infUnidCarga;
+        }
+
+        return $infUnidCarga;
     }
     
     protected function checkCTeKey(Dom $dom)
