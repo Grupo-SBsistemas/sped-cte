@@ -2226,7 +2226,7 @@ class Make
     {
         $identificador = '#97 <rem> - ';
         $this->rem = $this->dom->createElement('rem');
-        if ($std->CNPJ != '') {
+        if (isset($std->CNPJ) && $std->CNPJ) {
             $this->dom->addChild(
                 $this->rem,
                 'CNPJ',
@@ -2234,7 +2234,7 @@ class Make
                 true,
                 $identificador . 'CNPJ do Remente'
             );
-        } elseif ($std->CPF != '') {
+        } elseif (isset($std->CPF) && $std->CPF) {
             $this->dom->addChild(
                 $this->rem,
                 'CPF',
@@ -2402,7 +2402,7 @@ class Make
     {
         $identificador = '#142 <exped> - ';
         $this->exped = $this->dom->createElement('exped');
-        if ($std->CNPJ != '') {
+        if (isset($std->CNPJ) && $std->CNPJ) {
             $this->dom->addChild(
                 $this->exped,
                 'CNPJ',
@@ -2410,7 +2410,7 @@ class Make
                 true,
                 $identificador . 'Número do CNPJ'
             );
-        } elseif ($std->CPF != '') {
+        } elseif (isset($std->CPF) && $std->CPF) {
             $this->dom->addChild(
                 $this->exped,
                 'CPF',
@@ -2434,7 +2434,7 @@ class Make
                 $identificador . 'Número do CPF'
             );
         }
-        if (!empty($std->IE)) {
+        if (isset($std->IE) && $std->IE) {
             $this->dom->addChild(
                 $this->exped,
                 'IE',
@@ -2572,7 +2572,7 @@ class Make
     {
         $identificador = '#160 <receb> - ';
         $this->receb = $this->dom->createElement('receb');
-        if ($std->CNPJ != '') {
+        if (isset($std->CNPJ) && $std->CNPJ) {
             $this->dom->addChild(
                 $this->receb,
                 'CNPJ',
@@ -2580,7 +2580,7 @@ class Make
                 true,
                 $identificador . 'Número do CNPJ'
             );
-        } elseif ($std->CPF != '') {
+        } elseif (isset($std->CPF) && $std->CPF) {
             $this->dom->addChild(
                 $this->receb,
                 'CPF',
@@ -2604,7 +2604,7 @@ class Make
                 $identificador . 'Número do CPF'
             );
         }
-        if (!empty($std->IE)) {
+        if (isset($std->IE) && $std->IE) {
             $this->dom->addChild(
                 $this->receb,
                 'IE',
@@ -2742,7 +2742,7 @@ class Make
     {
         $identificador = '#178 <dest> - ';
         $this->dest = $this->dom->createElement('dest');
-        if ($std->CNPJ != '') {
+        if (isset($std->CNPJ) && $std->CNPJ) {
             $this->dom->addChild(
                 $this->dest,
                 'CNPJ',
@@ -2750,7 +2750,7 @@ class Make
                 true,
                 $identificador . 'Número do CNPJ'
             );
-        } elseif ($std->CPF != '') {
+        } elseif (isset($std->CPF) && $std->CPF) {
             $this->dom->addChild(
                 $this->dest,
                 'CPF',
@@ -2774,7 +2774,7 @@ class Make
                 $identificador . 'Número do CPF'
             );
         }
-        if (!empty($std->IE)) {
+        if (isset($std->IE) && $std->IE) {
             $this->dom->addChild(
                 $this->dest,
                 'IE',
