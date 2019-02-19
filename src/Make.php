@@ -3107,6 +3107,14 @@ class Make
             );
         }
 
+        $this->dom->addChild(
+            $this->imp,
+            'infAdFisco',
+            $std->infAdFisco,
+            false,
+            "$identificador Informações adicionais de interesse do Fisco"
+        );
+
         if ($std->vICMSUFFim != '' || $std->vICMSUFIni != '') {
             $icmsDifal = $this->dom->createElement("ICMSUFFim");
             $this->dom->addChild(
@@ -3177,14 +3185,6 @@ class Make
 
             $this->imp->appendChild($icmsDifal);
         }
-
-        $this->dom->addChild(
-            $this->imp,
-            'infAdFisco',
-            $std->infAdFisco,
-            false,
-            "$identificador Informações adicionais de interesse do Fisco"
-        );
 
         return $tagIcms;
     }
