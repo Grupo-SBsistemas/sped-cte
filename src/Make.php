@@ -3115,7 +3115,7 @@ class Make
             "$identificador Informações adicionais de interesse do Fisco"
         );
 
-        if ($std->vICMSUFFim != '' || $std->vICMSUFIni != '') {
+        if (isset($std->pICMSInterPart) && $std->pICMSInterPart) {
             $icmsDifal = $this->dom->createElement("ICMSUFFim");
             $this->dom->addChild(
                 $icmsDifal,
