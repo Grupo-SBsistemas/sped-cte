@@ -27,7 +27,7 @@ class Make
      * @var array
      */
     public $erros = [];
-    
+
     /**
      * versao
      * numero da versão do xml da CTe
@@ -511,19 +511,19 @@ class Make
      * @var array
      */
     private $autXML = array();
-    /**     
-     * Informações do responsavel tecnico pela emissao do DF-e      
-     * @var \DOMNode        
-     */     
+    /**
+     * Informações do responsavel tecnico pela emissao do DF-e
+     * @var \DOMNode
+     */
     private $infRespTec = '';
-    
+
     public function __construct()
     {
         $this->dom = new Dom('1.0', 'UTF-8');
         $this->dom->preserveWhiteSpace = false;
         $this->dom->formatOutput = false;
     }
-    
+
     /**
      * Returns xml string and assembly it is necessary
      * @return string
@@ -535,7 +535,7 @@ class Make
         }
         return $this->xml;
     }
-    
+
     /**
      * Retorns the key number of NFe (44 digits)
      * @return string
@@ -544,7 +544,7 @@ class Make
     {
         return $this->chCTe;
     }
-    
+
     /**
      * Returns the model of CTe 57 or 67
      * @return int
@@ -553,7 +553,7 @@ class Make
     {
         return $this->mod;
     }
-    
+
     /**
      * Call method of xml assembly. For compatibility only.
      * @return boolean
@@ -562,7 +562,7 @@ class Make
     {
         return $this->monta();
     }
-    
+
     /**
      * Monta o arquivo XML usando as tag's já preenchidas
      *
@@ -674,19 +674,25 @@ class Make
                 }
             }
 
-            if ($this->idDocAntEle != [] || $this->idDocAntPap != []) { //Caso tenha CT-es Anteriores viculados
+            if ($this->docAnt) { //Caso tenha CT-es Anteriores viculados
                 $this->dom->appChild($this->infCTeNorm, $this->docAnt, 'Falta tag "docAnt"');
 
                 foreach ($this->emiDocAnt as $emiDocAnt) {
                     $this->dom->appChild($this->docAnt, $emiDocAnt, 'Falta tag "emiDocAnt"');
-                    $this->dom->appChild($emiDocAnt, $this->idDocAnt, 'Falta tag "idDocAnt"');
 
-                    foreach ($this->idDocAntPap as $idDocAntPap) {
-                        $this->dom->appChild($this->idDocAnt, $idDocAntPap, 'Falta tag "emiDocAnt"');
-                    }
+                    foreach($emiDocAnt->idDocAnt as $idDocAnt){
+                        $this->dom->appChild($emiDocAnt, $idDocAnt, 'Falta tag "idDocAnt"');
+                        if(isset($idDocAnt->idDocAntEle)){
+                            foreach ($idDocAnt->idDocAntEle as $idDocAntEle) {
+                                $this->dom->appChild($idDocAnt, $idDocAntEle, 'Falta tag "emiDocAnt"');
+                            }
+                        }
 
-                    foreach ($this->idDocAntEle as $idDocAntEle) {
-                        $this->dom->appChild($this->idDocAnt, $idDocAntEle, 'Falta tag "emiDocAnt"');
+                        if(isset($idDocAnt->idDocAntPap)){
+                            foreach ($this->idDocAntPap as $idDocAntPap) {
+                                $this->dom->appChild($idDocAnt, $idDocAntPap, 'Falta tag "emiDocAnt"');
+                            }
+                        }
                     }
                 }
             }
@@ -730,7 +736,7 @@ class Make
             $this->dom->appChild($this->infCte, $autXML, 'Falta tag "autXML"');
         }
 
-        if ($this->infRespTec != '') {            
+        if ($this->infRespTec != '') {
             $this->dom->appChild($this->infCte, $this->infRespTec, 'Falta tag "infRespTec"');
         }
 
@@ -738,7 +744,7 @@ class Make
         $this->dom->appChild($this->CTe, $this->infCte, 'Falta tag "CTe"');
         //[0] tag CTe
         $this->dom->appendChild($this->CTe);
-        
+
         // testa da chave
         $this->checkCTeKey($this->dom);
         $this->xml = $this->dom->saveXML();
@@ -801,11 +807,11 @@ class Make
                 $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
             }
         }
-        
+
         $this->dom->appChild($this->CTe, $this->infCte, 'Falta tag "CTe"');
         //$this->dom->appChild($this->dom, $this->CTe, 'Falta tag "DOMDocument"');
         $this->dom->appendChild($this->CTe);
-        
+
         // testa da chave
         $this->checkCTeKey($this->dom);
         $this->xml = $this->dom->saveXML();
@@ -2966,7 +2972,7 @@ class Make
         );
         return $this->comp[$posicao];
     }
-    
+
     /**
      * tagICMS
      * Informações relativas ao ICMS
@@ -3208,7 +3214,7 @@ class Make
 
         $this->imp->appendChild($tagInfTribFed);
     }
-    
+
 
     /**
      * Tag raiz do documento xml
@@ -3553,6 +3559,20 @@ class Make
             $identificador . 'Razão Social ou Nome do Expedidor'
         );
 
+        if(isset($std->idDocAntEle) && count($std->idDocAntEle) > 0 ){
+            $this->emiDocAnt[$posicao]->idDocAnt[0]= $this->tagidDocAnt();
+            foreach ($std->idDocAntEle as $key => $eletronico) {
+                $this->emiDocAnt[$posicao]->idDocAnt[0]->idDocAntEle[$key] = $this->tagidDocAntEle($eletronico);
+            }
+        }
+
+        if(isset($std->idDocAntPap) && count($std->idDocAntPap) > 0 ){
+            $this->emiDocAnt[$posicao]->idDocAnt[1]= $this->tagidDocAnt();
+            foreach ($std->idDocAntPap as $key => $eletronico) {
+                $this->emiDocAnt[$posicao]->idDocAnt[1]->idDocAntPap[$key] = $this->tagidDocAntPap($eletronico);
+            }
+        }
+
         return $this->emiDocAnt[$posicao];
     }
 
@@ -3584,12 +3604,12 @@ class Make
         $identificador = '#342 <idDocAntPap> - ';
         $this->idDocAntPap[] = $this->dom->createElement('idDocAntPap');
         $posicao = (integer)count($this->idDocAntPap) - 1;
-        $this->dom->addChild($this->idDocAntPap[$posicao], 'tpDoc', $std->tpDoc, true, $identificador . 'Tipo do Documento ' 
+        $this->dom->addChild($this->idDocAntPap[$posicao], 'tpDoc', $std->tpDoc, true, $identificador . 'Tipo do Documento '
             . 'de Transporte Anterior');
 
         $this->dom->addChild($this->idDocAntPap[$posicao], 'serie', $std->serie, true, $identificador . 'Série do Documento Fiscal');
 
-        $this->dom->addChild($this->idDocAntPap[$posicao], 'subserie', $std->subserie, false, $identificador . 'Série do Documento Fiscal');
+        $this->dom->addChild($this->idDocAntPap[$posicao], 'subser', $std->subser, false, $identificador . 'Série do Documento Fiscal');
 
         $this->dom->addChild($this->idDocAntPap[$posicao], 'nDoc', $std->nDoc, true, $identificador . 'Número do Documento Fiscal');
 
@@ -3675,7 +3695,7 @@ class Make
 
         return $this->rodo;
     }
-    
+
     /**
      * Leiaute - Aéreo
      * Gera as tags para o elemento: "aereo" (Informações do modal Aéreo)
@@ -3788,8 +3808,8 @@ class Make
         );
         return $this->infCteSub;
     }
-    
-    
+
+
     /**
      * CT-e de substituição - tomaICMS
      * @param type $std
@@ -3801,7 +3821,7 @@ class Make
 
         return $this->tomaICMS;
     }
-    
+
     /**
      * CT-e de substituição - NF-e
      * @param type $std
@@ -3823,7 +3843,7 @@ class Make
 
         return $this->tomaICMS;
     }
-    
+
     /**
      * CT-e de substituição - NF
      * @param type $std
@@ -3861,12 +3881,12 @@ class Make
         $this->dom->addChild($this->refNF, 'nro', $std->nro, false, $identificador . 'Número');
         $this->dom->addChild($this->refNF, 'valor', $std->valor, false, $identificador . 'Valor');
         $this->dom->addChild($this->refNF, 'dEmi', $std->dEmi, false, $identificador . 'Emissão');
-        
+
         $this->tomaICMS->appendChild($this->refNF);
 
         return $this->tomaICMS;
     }
-    
+
     /**
      * CT-e de substituição - CT-e
      * @param type $std
@@ -3888,7 +3908,7 @@ class Make
 
         return $this->tomaICMS;
     }
-    
+
 
     /**
      * Leiaute - Rodoviário CTe OS
@@ -4249,7 +4269,7 @@ class Make
      *
      * @return \DOMElement
      */
-    public function taginfRespTec($std) 
+    public function taginfRespTec($std)
     {
         $identificador = '# <infRespTec> - ';
         $this->infRespTec = $this->dom->createElement('infRespTec');
@@ -4259,7 +4279,7 @@ class Make
             $std->CNPJ,
             true,
             $identificador . 'CNPJ responsável'
-        );        
+        );
         $this->dom->addChild(
             $this->infRespTec,
             'xContato',
@@ -4273,7 +4293,7 @@ class Make
             $std->email,
             true,
             $identificador . 'E-mail responsavel'
-        );        
+        );
         $this->dom->addChild(
             $this->infRespTec,
             'fone',
@@ -4425,7 +4445,7 @@ class Make
                 "Quantidade rateada (Peso,Volume)"
             );
         }
-        
+
         if ($std->tipo == 'c'){
             $this->infUnidCarga[$std->nItem][] = $infUnidCarga;
         } else {
@@ -4434,7 +4454,7 @@ class Make
 
         return $infUnidCarga;
     }
-    
+
     protected function checkCTeKey(Dom $dom)
     {
         $infCTe = $dom->getElementsByTagName("infCte")->item(0);
