@@ -1357,7 +1357,7 @@ class Make
             true,
             $identificador . 'Tomador do Serviço'
         );
-        if ($std->CNPJ != '') {
+        if (isset($std->CNPJ) && $std->CNPJ != '') {
             $this->dom->addChild(
                 $this->toma4,
                 'CNPJ',
@@ -1365,7 +1365,7 @@ class Make
                 true,
                 $identificador . 'Número do CNPJ'
             );
-        } elseif ($std->CPF != '') {
+        } elseif (isset($std->CPF) && $std->CPF != '') {
             $this->dom->addChild(
                 $this->toma4,
                 'CPF',
