@@ -496,7 +496,7 @@ class Tools extends ToolsCommon
      * @param  string $nProt protocol number
      * @return string
      */
-    public function sefazCancela($chave, $xJust, $nProt)
+    public function sefazCancela($chave, $xJust, $nProt, $retornar = false)
     {
         $uf = $this->validKeyByUF($chave);
         $xJust = Strings::replaceSpecialsChars(
@@ -514,7 +514,8 @@ class Tools extends ToolsCommon
             $chave,
             $tpEvento,
             $nSeqEvento,
-            $tagAdic
+            $tagAdic,
+            $retornar
         );
     }
 
@@ -645,7 +646,8 @@ class Tools extends ToolsCommon
         $chave,
         $tpEvento,
         $nSeqEvento = 1,
-        $tagAdic = ''
+        $tagAdic = '',
+        $retornar = false
     ) {
         $ignore = false;
         if ($tpEvento == 110140) {
@@ -684,6 +686,10 @@ class Tools extends ToolsCommon
             . "</infEvento>"
             . "</eventoCTe>";
 
+        if ($retornar){
+            return ['assinar' => $request];
+        }
+
         //assinatura dos dados
         $request = Signer::sign(
             $this->certificate,
@@ -695,13 +701,7 @@ class Tools extends ToolsCommon
         );
 
         $request = Strings::clearXmlString($request, true);
-//        if ($tpEvento != 610110) {
-//            $lote = $dt->format('YmdHis').rand(0, 9);
-//            $request = "<envEventoCTe xmlns=\"$this->urlPortal\" versao=\"$this->urlVersion\">"
-//                . "<idLote>$lote</idLote>"
-//                . $request
-//                . "</envEventoCTe>";
-//        }
+
         $this->isValid($this->urlVersion, $request, 'eventoCTe');
         $this->lastRequest = $request;
         $parameters = ['cteDadosMsg' => $request];
