@@ -496,7 +496,7 @@ class Tools extends ToolsCommon
      * @param  string $nProt protocol number
      * @return string
      */
-    public function sefazCancela($chave, $xJust, $nProt, $retornar = false)
+    public function sefazCancela($chave, $xJust, $nProt, $retornarXML = false)
     {
         $uf = $this->validKeyByUF($chave);
         $xJust = Strings::replaceSpecialsChars(
@@ -515,7 +515,7 @@ class Tools extends ToolsCommon
             $tpEvento,
             $nSeqEvento,
             $tagAdic,
-            $retornar
+            $retornarXML
         );
     }
 
@@ -647,7 +647,7 @@ class Tools extends ToolsCommon
         $tpEvento,
         $nSeqEvento = 1,
         $tagAdic = '',
-        $retornar = false
+        $retornarXML = false
     ) {
         $ignore = false;
         if ($tpEvento == 110140) {
@@ -686,7 +686,7 @@ class Tools extends ToolsCommon
             . "</infEvento>"
             . "</eventoCTe>";
 
-        if ($retornar){
+        if ($retornarXML){
             return ['assinar' => $request];
         }
 
