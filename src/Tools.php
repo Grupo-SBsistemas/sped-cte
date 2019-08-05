@@ -194,7 +194,8 @@ class Tools extends ToolsCommon
         $nIni,
         $nFin,
         $xJust,
-        $tpAmb = null
+        $tpAmb = null,
+        $retornarXML = false
     ) {
         if (empty($tpAmb)) {
             $tpAmb = $this->tpAmb;
@@ -239,6 +240,11 @@ class Tools extends ToolsCommon
             "<nCTFin>$nFin</nCTFin>" .
             "<xJust>$xJust</xJust>" .
             "</infInut></inutCTe>";
+
+        if ($retornarXML){
+            return ['assinar' => $msg];
+        }
+
         //assina a solicitação
         $request = Signer::sign(
             $this->certificate,
