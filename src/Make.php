@@ -3121,7 +3121,7 @@ class Make
             "$identificador Informações adicionais de interesse do Fisco"
         );
 
-        if (isset($std->pICMSUFFim) && $std->pICMSUFFim) {
+        if (isset($std->pICMSInterPart) && $std->pICMSInterPart) {
             $icmsDifal = $this->dom->createElement("ICMSUFFim");
             $this->dom->addChild(
                 $icmsDifal,
@@ -3155,6 +3155,14 @@ class Make
                 true,
                 "$identificador Alíquota interestadual
                 das UF envolvidas"
+            );
+            $this->dom->addChild(
+                $icmsDifal,
+                'pICMSInterPart',
+                $std->pICMSInterPart,
+                true,
+                "$identificador Percentual
+                provisório de partilha entre os estados"
             );
             $this->dom->addChild(
                 $icmsDifal,
