@@ -191,7 +191,7 @@ class Tools
         $this->contingency = new Contingency();
         $this->soap = new SoapCurl($this->certificate);
     }
-    
+
     /**
      * Sets environment time zone
      * @param string $acronym (ou seja a sigla do estado)
@@ -201,7 +201,7 @@ class Tools
     {
         date_default_timezone_set(TimeZoneByUF::get($acronym));
     }
-    
+
     /**
      * Set application version
      * @param string $ver
@@ -223,7 +223,7 @@ class Tools
         $this->soap = $soap;
         $this->soap->loadCertificate($this->certificate);
     }
-    
+
     /**
      * Set OPENSSL Algorithm using OPENSSL constants
      * @param int $algorithm
@@ -246,7 +246,7 @@ class Tools
         }
         return $this->modelo;
     }
-    
+
     /**
      * Set or get parameter layout version
      * @param string $version
@@ -267,7 +267,7 @@ class Tools
         }
         return $this->versao;
     }
-    
+
     /**
      * Recover cUF number from state acronym
      * @param string $acronym Sigla do estado
@@ -277,7 +277,7 @@ class Tools
     {
         return UFlist::getCodeByUF($acronym);
     }
-    
+
     /**
      * Recover state acronym from cUF number
      * @param int $cUF
@@ -287,7 +287,7 @@ class Tools
     {
         return UFlist::getUFByCode($cUF);
     }
-    
+
     /**
      * Validate cUF from the key content and returns the state acronym
      * @param string $chave
@@ -304,7 +304,7 @@ class Tools
         }
         return $uf;
     }
-    
+
     /**
      * Sign CTe
      * @param  string  $xml CTe xml content
@@ -333,10 +333,14 @@ class Tools
         if ($modelo == 67) {
             $method = 'cteOS';
         }
+        $isInfCTeSupl = !empty($dom->getElementsByTagName('infCTeSupl')->item(0));
+        if (!$isInfCTeSupl) {
+            $signed = $this->addQRCode($dom);
+        }
         $this->isValid($this->versao, $signed, $method);
         return $signed;
     }
-    
+
     /**
      * @todo
      * Corret NFe fields when in contingency mode is set
@@ -372,7 +376,7 @@ class Tools
             $schema
         );
     }
-    
+
     /**
      * Verifies the existence of the service
      * @param string $service
@@ -384,7 +388,7 @@ class Tools
             55 => ['SVCAN', 'SVCRS', 'EPEC', 'FSDA'],
             65 => ['FSDA', 'EPEC', 'OFFLINE']
         ];
-        
+
         $type = $this->contingency->type;
         $mod = $this->modelo;
         if (!empty($type)) {
@@ -395,7 +399,7 @@ class Tools
                 );
             }
         }
-        
+
         //se a contingencia é OFFLINE ou FSDA nenhum servidor está disponivel
         //se a contigencia EPEC está ativa apenas o envio de Lote está ativo,
         //então gerar um RunTimeException
@@ -410,7 +414,7 @@ class Tools
             );
         }
     }
-    
+
     /**
      * Alter environment from "homologacao" to "producao" and vice-versa
      * @param int $tpAmb
@@ -423,7 +427,7 @@ class Tools
             $this->ambiente = ($tpAmb == 1) ? 'producao' : 'homologacao';
         }
     }
-    
+
     /**
      * Set option for canonical transformation see C14n
      * @param array $opt
@@ -436,7 +440,7 @@ class Tools
         }
         return $this->canonical;
     }
-    
+
     /**
      * Assembles all the necessary parameters for soap communication
      * @param string $service
@@ -515,7 +519,7 @@ class Tools
             ['cUF' => $this->urlcUF, 'versaoDados' => $this->urlVersion]
         );
     }
-    
+
     /**
      * Send request message to webservice
      * @param array $parameters
@@ -536,7 +540,7 @@ class Tools
             $this->objHeader
         );
     }
-    
+
     /**
      * Recover path to xml data base with list of soap services
      * @return string
@@ -551,7 +555,7 @@ class Tools
         }
         return file_get_contents($file);
     }
-    
+
     /**
      * Add QRCode Tag to signed XML from a NFCe
      * @param DOMDocument $dom
@@ -559,27 +563,12 @@ class Tools
      */
     protected function addQRCode(DOMDocument $dom)
     {
-        $memmod = $this->modelo;
-        $this->modelo = 65;
-        $uf = UFList::getUFByCode(
-            $dom->getElementsByTagName('cUF')->item(0)->nodeValue
-        );
-        $this->servico(
-            'NfeConsultaQR',
-            $uf,
-            $dom->getElementsByTagName('tpAmb')->item(0)->nodeValue
-        );
         $signed = QRCode::putQRTag(
-            $dom,
-            $this->config->CSC,
-            $this->config->CSCid,
-            $this->urlVersion,
-            $this->urlService,
-            $this->getURIConsultaNFCe($uf)
+            $dom
         );
-        $this->modelo = $memmod;
         return Strings::clearXmlString($signed);
     }
+
 
     /**
      * Get URI for search NFCe by chave
@@ -601,7 +590,7 @@ class Tools
         );
         return $std->$uf;
     }
-    
+
     /**
      * Verify if SOAP class is loaded, if not, force load SoapCurl
      */
