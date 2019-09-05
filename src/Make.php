@@ -516,6 +516,14 @@ class Make
      * @var \DOMNode
      */
     private $infRespTec = '';
+    /**
+     * @var DOMElement
+     */
+    private $infCTeSupl;
+    /**
+     * @var DOMElement
+     */
+    private $qrCodCTe;
 
     public function __construct()
     {
@@ -742,6 +750,12 @@ class Make
 
         //[1] tag infCTe
         $this->dom->appChild($this->CTe, $this->infCte, 'Falta tag "CTe"');
+
+        //infCTeSupl
+        if ($this->infCTeSupl){
+            $this->dom->appChild($this->CTe, $this->infCTeSupl,'Falta a tag "infCTeSupl');
+        }
+
         //[0] tag CTe
         $this->dom->appendChild($this->CTe);
 
@@ -3207,6 +3221,31 @@ class Make
         $this->imp->appendChild($tagInfTribFed);
     }
 
+    /**
+     * Informações suplementares do CTe
+     * @return DOMElement
+     */
+    public function taginfCTeSupl()
+    {
+        $this->infCTeSupl = $this->dom->createElement("infCTeSupl");
+        return $this->infCTeSupl;
+    }
+    /**
+     * Add QRCode Tag to signed XML from a CTe
+     * @param DOMDocument $dom
+     * @return string
+     */
+    public function tagQRCode($chave)
+    {
+        $this->qrCodCTe = $this->dom->addChild(
+            $this->infCTeSupl,
+            'qrCodCTe',
+            "https://dfe-portal.svrs.rs.gov.br/cte/qrCode?chCTe={$chave}&tpAmb={$this->tpAmb}",
+            true, 'QRCode de consulta'
+        );
+
+        return $this->qrCodCTe;
+    }
 
     /**
      * Tag raiz do documento xml

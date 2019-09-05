@@ -333,10 +333,7 @@ class Tools
         if ($modelo == 67) {
             $method = 'cteOS';
         }
-        $isInfCTeSupl = !empty($dom->getElementsByTagName('infCTeSupl')->item(0));
-        if (!$isInfCTeSupl) {
-            $signed = $this->addQRCode($dom);
-        }
+
         $this->isValid($this->versao, $signed, $method);
         return $signed;
     }
@@ -555,20 +552,6 @@ class Tools
         }
         return file_get_contents($file);
     }
-
-    /**
-     * Add QRCode Tag to signed XML from a NFCe
-     * @param DOMDocument $dom
-     * @return string
-     */
-    protected function addQRCode(DOMDocument $dom)
-    {
-        $signed = QRCode::putQRTag(
-            $dom
-        );
-        return Strings::clearXmlString($signed);
-    }
-
 
     /**
      * Get URI for search NFCe by chave
