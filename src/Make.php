@@ -761,7 +761,9 @@ class Make
 
         // testa da chave
         $this->checkCTeKey($this->dom);
+
         $this->xml = $this->dom->saveXML();
+
         return true;
     }
 
@@ -3235,12 +3237,12 @@ class Make
      * @param DOMDocument $dom
      * @return string
      */
-    public function tagQRCode($chave)
+    public function tagQRCode($chave, $url)
     {
         $this->qrCodCTe = $this->dom->addChild(
             $this->infCTeSupl,
             'qrCodCTe',
-            "https://dfe-portal.svrs.rs.gov.br/cte/qrCode?chCTe={$chave}&tpAmb={$this->tpAmb}",
+            "{$url}?chCTe={$chave}&tpAmb={$this->tpAmb}",
             true, 'QRCode de consulta'
         );
 
