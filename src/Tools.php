@@ -405,7 +405,7 @@ class Tools extends ToolsCommon
      * @param  int $nSeqEvento
      * @return string
      */
-    public function sefazCCe($chave, $infCorrecao = [], $nSeqEvento = 1)
+    public function sefazCCe($chave, $infCorrecao = [], $nSeqEvento = 1, $retornarXML = false)
     {
         $uf = $this->validKeyByUF($chave);
         $tpEvento = 110110;
@@ -415,7 +415,8 @@ class Tools extends ToolsCommon
             $chave,
             $tpEvento,
             $nSeqEvento,
-            $tagAdic
+            $tagAdic,
+            $retornarXML
         );
     }
 
