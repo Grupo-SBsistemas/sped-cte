@@ -490,7 +490,7 @@ class Make
      * Dados dos Veículos
      * @var array
      */
-    private $veic = array();
+    private $veic = null;
     /**
      * Proprietários do Veículo. Só preenchido quando o veículo não pertencer à empresa emitente do CT-e
      * @var array
@@ -524,6 +524,11 @@ class Make
      * @var DOMElement
      */
     private $qrCodCTe;
+    /**
+     * Dados do fretamento
+     * @var array
+     */
+    private $infFretamento = null;
 
     public function __construct()
     {
@@ -717,9 +722,6 @@ class Make
                     $this->dom->appChild($this->rodo, $occ, 'Falta tag "occ"');
                 }
 
-                foreach ($this->veic as $veic) {
-                    $this->dom->appChild($this->rodo, $veic, 'Falta tag "veic"');
-                }
             } elseif ($this->modal=='02') {
                 $this->dom->appChild($this->infModal, $this->aereo, 'Falta tag "aereo"');
             } else {
@@ -820,6 +822,7 @@ class Make
             if ($this->infModal != '') {
                 $this->dom->appChild($this->infCTeNorm, $this->infModal, 'Falta tag "infModal"');
                 $this->dom->appChild($this->rodo, $this->veic, 'Falta tag "veic"');
+                $this->dom->appChild($this->rodo, $this->infFretamento, 'Falta tag "infFretamento"');
                 $this->dom->appChild($this->infModal, $this->rodo, 'Falta tag "rodo"');
             }
         }
@@ -3721,10 +3724,13 @@ class Make
     {
         $identificador = '#1 <rodoOS> - ';
         $this->rodo = $this->dom->createElement('rodoOS');
-        $this->dom->addChild($this->rodo, 'TAF', $std->TAF, false, $identificador .
+        if(isset($std->TAF)) {
+            $this->dom->addChild($this->rodo, 'TAF', $std->TAF, false, $identificador .
                              'Termo de Autorização de Fretamento - TAF');
-        $this->dom->addChild($this->rodo, 'NroRegEstadual', $std->nroRegEstadual, false, $identificador .
+        } else if(isset($std->nroRegEstadual)){
+            $this->dom->addChild($this->rodo, 'NroRegEstadual', $std->nroRegEstadual, false, $identificador .
                              'Número do Registro Estadual');
+        }
 
         return $this->rodo;
     }
@@ -4191,6 +4197,39 @@ class Make
             $identificador . 'UF em que veículo está licenciado'
         );
         return $this->veic;
+    }
+
+    /**
+     * Leiaute - Rodoviário
+     * Gera as tags para o elemento: "infFretamento" (Dados do fretamento (apenas paraTransporte de Pessoas))
+     * #21
+     * Nível: 1
+     * @return mixed
+     */
+    public function taginfFretamento($std)
+    {
+        $identificador = '#21 <infFretamento> - ';
+        $this->infFretamento = $this->dom->createElement('infFretamento');
+
+        $this->dom->addChild(
+            $this->infFretamento,
+            'tpFretamento',
+            $std->tpFretamento,
+            false,
+            $identificador . 'Tipo Fretamento'
+        );
+
+        if($std->tpFretamento == 1) {
+            $this->dom->addChild(
+                $this->infFretamento,
+                'dhViagem',
+                $std->dhViagem,
+                false,
+                $identificador . 'Data e hora da viagem'
+            );
+        }
+
+        return $this->infFretamento;
     }
 
     /**
