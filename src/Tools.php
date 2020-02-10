@@ -949,6 +949,8 @@ class Tools extends ToolsCommon
                 "{$nroItemAlteradoOptionalElement}" .
                 "</infCorrecao>";
         }
+
+        $correcoes = str_replace('&', "&amp;", $correcoes);
         //monta mensagem
         return "<evCCeCTe>" .
             "<descEvento>Carta de Correcao</descEvento>" .
