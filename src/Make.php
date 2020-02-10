@@ -3242,10 +3242,11 @@ class Make
      */
     public function tagQRCode($chave, $url)
     {
+        $url = htmlspecialchars("{$url}?chCTe={$chave}&tpAmb={$this->tpAmb}");
         $this->qrCodCTe = $this->dom->addChild(
             $this->infCTeSupl,
             'qrCodCTe',
-            "{$url}?chCTe={$chave}&tpAmb={$this->tpAmb}",
+            $url,
             true, 'QRCode de consulta'
         );
 
