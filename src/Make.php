@@ -2304,7 +2304,7 @@ class Make
         $this->dom->addChild(
             $this->rem,
             'xFant',
-            $std->xFant,
+            Strings::replaceSpecialsChars($std->xFant),
             false,
             $identificador . 'Nome fantasia'
         );
