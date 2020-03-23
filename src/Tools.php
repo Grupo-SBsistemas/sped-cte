@@ -88,7 +88,7 @@ class Tools extends ToolsCommon
         $this->lastResponse = $this->sendRequest($body, $parameters);
         return $this->lastResponse;
     }
-    
+
     /**
      * Request authorization to issue CTe OS with one document only
      * @param type $xml
@@ -949,6 +949,8 @@ class Tools extends ToolsCommon
                 "{$nroItemAlteradoOptionalElement}" .
                 "</infCorrecao>";
         }
+
+        $correcoes = str_replace('&', "&amp;", $correcoes);
         //monta mensagem
         return "<evCCeCTe>" .
             "<descEvento>Carta de Correcao</descEvento>" .
