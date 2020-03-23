@@ -189,6 +189,8 @@
             <CteCancelamento method='CTeCancelamento' operation='CteCancelamento' version='3.00'>https://homologacao.nfe.fazenda.sp.gov.br/cteWEB/services/CteCancelamento.asmx</CteCancelamento>
             <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsulta' version='3.00'>https://homologacao.nfe.fazenda.sp.gov.br/cteWEB/services/cteConsulta.asmx</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CteStatusServico' version='3.00'>https://homologacao.nfe.fazenda.sp.gov.br/cteWEB/services/CteStatusServico.asmx</CteStatusServico>
+            <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CteRecepcaoEvento' version='3.00'>https://homologacao.nfe.fazenda.sp.gov.br/cteweb/services/cteRecepcaoEvento.asmx</CteRecepcaoEvento>
+             <CteInutilizacao method='cteInutilizacaoCT' operation='CteInutilizacao' version='3.00'>https://homologacao.nfe.fazenda.sp.gov.br/cteWEB/services/cteInutilizacao.asmx</CteInutilizacao>
             <QRCode method='QRCode' operation='QRCode' version='3.00'>https://homologacao.nfe.fazenda.sp.gov.br/CTeConsulta/qrCode</QRCode>
         </homologacao>
         <producao>
@@ -197,6 +199,8 @@
             <CteCancelamento method='CTeCancelamento' operation='CteCancelamento' version='3.00'>https://nfe.fazenda.sp.gov.br/cteWEB/services/CteCancelamento.asmx</CteCancelamento>
             <CteConsultaProtocolo method='cteConsultaCT' operation='CteConsulta' version='3.00'>https://nfe.fazenda.sp.gov.br/cteWEB/services/CteConsulta.asmx</CteConsultaProtocolo>
             <CteStatusServico method='cteStatusServicoCT' operation='CteStatusServico' version='3.00'>https://nfe.fazenda.sp.gov.br/cteWEB/services/CteStatusServico.asmx</CteStatusServico>
+             <CteRecepcaoEvento method='cteRecepcaoEvento' operation='CteRecepcaoEvento' version='3.00'>https://nfe.fazenda.sp.gov.br/cteweb/services/cteRecepcaoEvento.asmx</CteRecepcaoEvento>
+            <CteInutilizacao method='cteInutilizacaoCT' operation='CteInutilizacao' version='3.00'>https://nfe.fazenda.sp.gov.br/cteWEB/services/cteInutilizacao.asmx</CteInutilizacao>
             <QRCode method='QRCode' operation='QRCode' version='3.00'>https://nfe.fazenda.sp.gov.br/CTeConsulta/qrCode</QRCode>
         </producao>
     </UF>
