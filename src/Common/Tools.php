@@ -27,6 +27,7 @@ use NFePHP\Common\TimeZoneByUF;
 use NFePHP\Common\UFList;
 use NFePHP\Common\Validator;
 use NFePHP\CTe\Factories\Contingency;
+use NFePHP\CTe\Factories\ContingencyCTe;
 use NFePHP\CTe\Factories\Header;
 use NFePHP\CTe\Factories\QRCode;
 
@@ -344,13 +345,13 @@ class Tools
      * @param string $xml NFe xml content
      * @return string
      */
-    protected function correctNFeForContingencyMode($xml)
+    protected function correctCTeForContingencyMode($xml)
     {
         if ($this->contingency->type == '') {
             return $xml;
         }
-        $xml = ContingencyNFe::adjust($xml, $this->contingency);
-        return $this->signNFe($xml);
+        $xml = ContingencyCTe::adjust($xml, $this->contingency);
+        return $this->signCTe($xml);
     }
 
     /**
@@ -382,8 +383,8 @@ class Tools
     protected function checkContingencyForWebServices($service)
     {
         $permit = [
-            55 => ['SVCAN', 'SVCRS', 'EPEC', 'FSDA'],
-            65 => ['FSDA', 'EPEC', 'OFFLINE']
+            57 => ['SVSP', 'SVRS'],
+            67 => ['SVSP', 'SVRS']
         ];
 
         $type = $this->contingency->type;
@@ -395,20 +396,6 @@ class Tools
                     . "para o modelo [$mod]"
                 );
             }
-        }
-
-        //se a contingencia é OFFLINE ou FSDA nenhum servidor está disponivel
-        //se a contigencia EPEC está ativa apenas o envio de Lote está ativo,
-        //então gerar um RunTimeException
-        if ($type == 'FSDA'
-            || $type == 'OFFLINE'
-            || ($type == 'EPEC' && $service != 'RecepcaoEvento')
-        ) {
-            throw new RuntimeException(
-                "Quando operando em modo de contingência ["
-                . $this->contingency->type
-                . "], este serviço [$service] não está disponível."
-            );
         }
     }
 
@@ -458,7 +445,7 @@ class Tools
         if (!$ignoreContingency) {
             $contType = $this->contingency->type;
             if (!empty($contType)
-                && ($contType == 'SVCRS' || $contType == 'SVCAN')
+                && ($contType == 'SVRS' || $contType == 'SVSP')
             ) {
                 $sigla = $contType;
             }
@@ -481,7 +468,7 @@ class Tools
         //recuperação do cUF
         $this->urlcUF = $this->getcUF($uf);
         if ($this->urlcUF > 91) {
-            //foi solicitado dado de SVCRS ou SVCAN
+            //foi solicitado dado de SVRS ou SVSP
             $this->urlcUF = $this->getcUF($this->config->siglaUF);
         }
         //recuperação da versão

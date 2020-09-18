@@ -54,11 +54,16 @@ class Tools extends ToolsCommon
             //esses xml deverão ser modificados e re-assinados e retornados
             //no parametro $xmls para serem armazenados pelo aplicativo
             //pois serão alterados
-            foreach ($aXml as $doc) {
+            foreach ($aXml as $ind => $doc) {
                 //corrigir o xml para o tipo de contigência setado
-                $xmls[] = $this->correctNFeForContingencyMode($doc);
+                $aXml[$ind] = $this->correctCTeForContingencyMode($doc);
             }
-            $aXml = $xmls;
+
+            foreach ($aXml as $key => $value) {
+                $aXml[$key] = $this->signCTe($value);
+            }
+
+            $xmls = $aXml;
         }
 
         $sxml = implode("", $aXml);
@@ -85,6 +90,7 @@ class Tools extends ToolsCommon
             $parameters = ['cteDadosMsgZip' => $gzdata];
             $body = "<cteDadosMsgZip xmlns=\"$this->urlNamespace\">$gzdata</cteDadosMsgZip>";
         }
+
         $this->lastResponse = $this->sendRequest($body, $parameters);
         return $this->lastResponse;
     }
@@ -576,7 +582,7 @@ class Tools extends ToolsCommon
         if ($this->contingency->type !== 'EPEC') {
             throw new \RuntimeException('A contingência EPEC deve estar ativada.');
         }
-        $xml = $this->correctNFeForContingencyMode($xml);
+        $xml = $this->correctCTeForContingencyMode($xml);
         $dom = new \DOMDocument('1.0', 'UTF-8');
         $dom->preserveWhiteSpace = false;
         $dom->formatOutput = false;
