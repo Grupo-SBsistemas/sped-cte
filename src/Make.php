@@ -733,6 +733,11 @@ class Make
                     $this->dom->appChild($this->infCteSub, $this->tomaICMS, 'Falta tag "tomaICMS"');
                 }
 
+                if ($indAlteraToma = $this->dom->getNode('indAlteraToma') != ''){
+                    $this->infCteSub->removeChild($indAlteraToma);
+                    $this->infCteSub->appChild($indAlteraToma);
+                }
+
 
                 $this->dom->appChild($this->infCTeNorm, $this->infCteSub, 'Falta tag "infCteSub"');
             }
