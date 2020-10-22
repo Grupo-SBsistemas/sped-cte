@@ -3846,6 +3846,17 @@ class Make
             false,
             "$identificador  Chave de acesso do CT-e de Anulação"
         );
+
+        if (isset($std->indAlteraToma) && $std->indAlteraToma == 1){
+            $this->dom->addChild(
+                $this->infCteSub,
+                'indAlteraToma',
+                $std->indAlteraToma,
+                false,
+                "$identificador  Indicador de CT-e Alteração de Tomador"
+            );
+        }
+
         return $this->infCteSub;
     }
 
