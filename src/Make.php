@@ -733,6 +733,13 @@ class Make
                     $this->dom->appChild($this->infCteSub, $this->tomaICMS, 'Falta tag "tomaICMS"');
                 }
 
+                $alteraToma = $this->infCteSub->getElementsByTagName('indAlteraToma')->item(0);
+
+                if ($alteraToma){
+
+                    $this->infCteSub->removeChild($alteraToma);
+                    $this->infCteSub->appendChild($alteraToma);
+                }
 
                 $this->dom->appChild($this->infCTeNorm, $this->infCteSub, 'Falta tag "infCteSub"');
             }
