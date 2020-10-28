@@ -740,7 +740,6 @@ class Make
                     $this->infCteSub->removeChild($alteraToma);
                     $this->infCteSub->appendChild($alteraToma);
                 }
-
                 $this->dom->appChild($this->infCTeNorm, $this->infCteSub, 'Falta tag "infCteSub"');
             }
 
