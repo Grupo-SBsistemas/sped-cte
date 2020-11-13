@@ -77,10 +77,9 @@ class Contingency
      * @param string $acronym Sigla do estado
      * @param string $motive
      * @param string $type Opcional parameter only used if FS-DA, EPEC or OFFLINE
-     * @param int    $timestamp Contingency entry date
      * @return string
      */
-    public function activate($acronym, $motive, $type = '', $timestamp)
+    public function activate($acronym, $motive, $type = '')
      {
         $dt = new \DateTime('now');
 
@@ -91,7 +90,6 @@ class Contingency
         }
 
         $this->config = $this->configBuild($dt->getTimestamp(), $motive, $type);
-        $this->config = $this->configBuild($timestamp, $motive, $type);
         return $this->__toString();
      }
 
