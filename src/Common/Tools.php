@@ -345,7 +345,7 @@ class Tools
      * @param string $xml NFe xml content
      * @return string
      */
-    protected function correctCTeForContingencyMode($xml)
+    public function correctCTeForContingencyMode($xml)
     {
         if ($this->contingency->type == '') {
             return $xml;

@@ -60,9 +60,24 @@ class ContingencyCTe
             $tpEmis,
             $cNF
         );
-
         $ide->getElementsByTagName('cDV')->item(0)->nodeValue = substr($chave, -1);
         $infCte->setAttribute('Id', 'CTe' . $chave);
+
+        $qrCode = $dom->getElementsByTagName('qrCodCTe')->item(0);
+
+        // Altera a URL do qrcode
+        $qrCode->textContent = self::replace_between($qrCode->textContent, 'chCTe=', '&', $chave);
+
         return Strings::clearXmlString($dom->saveXML(), true);
+    }
+
+    private static function replace_between($str, $needle_start, $needle_end, $replacement) {
+        $pos = strpos($str, $needle_start);
+        $start = $pos === false ? 0 : $pos + strlen($needle_start);
+
+        $pos = strpos($str, $needle_end, $start);
+        $end = $pos === false ? strlen($str) : $pos;
+
+        return substr_replace($str, $replacement, $start, $end - $start);
     }
 }

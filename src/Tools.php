@@ -59,10 +59,6 @@ class Tools extends ToolsCommon
                 $aXml[$ind] = $this->correctCTeForContingencyMode($doc);
             }
 
-            foreach ($aXml as $key => $value) {
-                $aXml[$key] = $this->signCTe($value);
-            }
-
             $xmls = $aXml;
         }
 

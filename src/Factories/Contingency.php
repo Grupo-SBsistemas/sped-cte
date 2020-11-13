@@ -77,20 +77,23 @@ class Contingency
      * @param string $acronym Sigla do estado
      * @param string $motive
      * @param string $type Opcional parameter only used if FS-DA, EPEC or OFFLINE
+     * @param int    $timestamp Contingency entry date
      * @return string
      */
-    public function activate($acronym, $motive, $type = '')
-    {
+    public function activate($acronym, $motive, $type = '', $timestamp)
+     {
         $dt = new \DateTime('now');
-        
+
         $type = strtoupper(str_replace('-', '', $type));
 
         if (empty($type)) {
             $type = $this->getSVCByUF($acronym);
         }
+
         $this->config = $this->configBuild($dt->getTimestamp(), $motive, $type);
+        $this->config = $this->configBuild($timestamp, $motive, $type);
         return $this->__toString();
-    }
+     }
 
     /**
      * Return the SVC corresponding to the state
