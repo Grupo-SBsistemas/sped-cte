@@ -1,5 +1,5 @@
 {
-    "name": "fonini/sped-cte",    
+    "name": "grupo-sbsistemas/sped-cte",    
     "type": "library",
     "description": "API para geração e comunicação da CTe com as SEFAZ autorizadoras.",
     "keywords": ["cte", "sped", "nfephp"],
@@ -20,12 +20,12 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/fonini/sped-common.git"
+            "url": "https://github.com/grupo-sbsistemas/sped-common.git"
         }
     ],
     "require": {
         "php" : ">=5.6",
-        "fonini/sped-common" : "dev-master",
+        "grupo-sbsistemas/sped-common" : "dev-master",
         "justinrainbow/json-schema": "^5.2",
         "symfony/yaml": "^3.3"
     },
