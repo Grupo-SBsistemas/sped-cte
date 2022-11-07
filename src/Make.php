@@ -2161,6 +2161,16 @@ class Make
             false,
             $identificador . 'Nome fantasia'
         );
+
+        if (isset($std->CRT) && $std->CRT) {
+            $this->dom->addChild(
+                $this->emit,
+                'CRT',
+                $std->CRT,
+                false,
+                $identificador . 'CRT'
+            );
+        }
         return $this->emit;
     }
 
