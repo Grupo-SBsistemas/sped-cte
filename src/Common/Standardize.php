@@ -42,6 +42,7 @@ class Standardize
     public $rootTagList = [
         'enviCTe',
         'retEnviCte',
+        'retEnviCTe',
         'retConsReciCTe',
         'consSitCTe',
         'retConsSitCTe',
